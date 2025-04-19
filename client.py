@@ -16,16 +16,16 @@ from settings import headers, cookie_param_name, data_fragment_size, encrypt, de
 
 def send_and_recv(buf):
     data = encrypt(buf)
-    print 'send data length', len(data)
+    print ("send data length"), len(data)
     cookies = {cookie_param_name: urllib.quote(data)}
     response = http_request('GET', urlparse.urljoin(server_url, route_to_transport), cookies=cookies)
     ciphers = re.findall('"(.*?)"', response)
     ciphertext = ''.join(ciphers)
     digest = md5digest(ciphertext)
     if response[-len(digest):] != digest:
-        print 'recv data digest error!'
+        print ("recv data digest error!")
         return ''
-    print 'recv data length', len(ciphertext)
+    print ("recv data length"), len(ciphertext)
     return decrypt(ciphertext)
 
 
@@ -34,16 +34,16 @@ def http_request(method, url, **kwargs):
         ret = requests.request(method, url, headers=headers, timeout=5,
                                proxies=http_proxy, verify=False, **kwargs).content
     except Exception as e:
-        print 'url request exception', str(e)
+        print ("url request exception"), str(e)
         ret = ''
     return ret
 
 
 def argparse():
     if len(sys.argv) != 4:
-        print 'usage: python client.py listen-port server-url http-proxy'
-        print 'e.g. python client.py 2222 http://12.34.56.78:8089/ http://proxy.yourcorp.com:8080'
-        print 'then "ssh root@localhost -p 2222" will ssh to 12.34.56.78'
+        print ("usage: python client.py listen-port server-url http-proxy")
+        print ("e.g. python client.py 2222 http://12.34.56.78:8089/ http://proxy.yourcorp.com:8080")
+        print ("then "ssh root@localhost -p 2222" will ssh to 12.34.56.78"
         sys.exit()
     return int(sys.argv[1]), sys.argv[2], sys.argv[3]
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     shutdown = lambda: 'client exited, %s' % http_request('GET', urlparse.urljoin(server_url, route_to_shutdown))
     while True:
         local, _ = socket.accept()
-        print 'client accepted,', http_request('GET', urlparse.urljoin(server_url, route_to_init))
+        print ("client accepted,"), http_request('GET', urlparse.urljoin(server_url, route_to_init))
         while True:
             try:
                 buf = local.recv(data_fragment_size)
