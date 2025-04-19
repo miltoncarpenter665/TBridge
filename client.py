@@ -43,7 +43,7 @@ def argparse():
     if len(sys.argv) != 4:
         print ("usage: python client.py listen-port server-url http-proxy")
         print ("e.g. python client.py 2222 http://12.34.56.78:8089/ http://proxy.yourcorp.com:8080")
-        print ("then "ssh root@localhost -p 2222" will ssh to 12.34.56.78"
+        print ("then ssh root@localhost -p 2222 will ssh to 12.34.56.78")
         sys.exit()
     return int(sys.argv[1]), sys.argv[2], sys.argv[3]
 
@@ -63,10 +63,10 @@ if __name__ == '__main__':
             try:
                 buf = local.recv(data_fragment_size)
             except:
-                print shutdown()
+                print (shutdown())
                 break
             if len(buf) == 0:
-                print shutdown()
+                print (shutdown())
                 break
             resp = send_and_recv(buf)
             local.sendall(resp)
